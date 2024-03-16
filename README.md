@@ -1,6 +1,6 @@
 <!-- @format -->
 
-# Security CW2 POS
+# Pharmacy Frontend
 
 ## Getting started
 
