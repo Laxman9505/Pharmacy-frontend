@@ -1,0 +1,42 @@
+/** @format */
+* {
+  font-family: "Poppins", sans-serif !important;
+}
+body {
+  font-family: "Poppins", sans-serif !important;
+  overflow: scroll !important;
+}
+.container-scroller {
+  height: 100vh;
+}
+.verification-container .ant-input {
+  width: 3rem !important;
+  border: 1px solid #eaeaea;
+  border-radius: 5px;
+  height: 30px;
+}
+.otp-container div {
+  justify-content: space-between !important;
+  /* width: 100% !important; */
+}
+.order-container .ant-picker .ant-picker-input > input {
+  width: 166px;
+  height: 30px;
+}
+.ant-card-body {
+  padding: 12px !important;
+}
+.ant-card-head {
+  padding: 12px !important;
+}
+.ant-btn-default {
+  background: #ffffff;
+  border-color: #00b96b;
+  color: #00b96b;
+}
+a {
+  text-decoration: none;
+}
+.ant-input-affix-wrapper > input.ant-input {
+  font-size: 14px;
+}
