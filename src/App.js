@@ -18,6 +18,7 @@ import NewOrder from "./pages/NewOrder/NewOrder";
 import Orders from "./pages/Orders/Orders";
 import ProductCategories from "./pages/Product Categories/ProductCategories";
 import StoreSettings from "./pages/Storesettings/StoreSettings";
+import Suppliers from "./pages/Suppliers/Suppliers";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
           <Route path="/store-settings" element={<StoreSettings />} />
           <Route path="/product-categories" element={<ProductCategories />} />
           <Route path="/manage-customers" element={<Customers />} />
+          <Route path="/manage-suppliers" element={<Suppliers />} />
           {/* <Route path="/login" element={<Login />} />
             <Route path="/send-otp" element={<SendOTP />} />
             <Route path="/verify-otp" element={<ValidateOTP />} />

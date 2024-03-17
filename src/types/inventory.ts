@@ -4,6 +4,8 @@ export interface Product {
   _id: string;
   name: string;
   category: { categoryName: string; id: string };
+  supplier: { supplierName: string; id: string };
+
   manufacturer: string;
   manufactureDate: string; // or Date for Date object
   formulation: string;

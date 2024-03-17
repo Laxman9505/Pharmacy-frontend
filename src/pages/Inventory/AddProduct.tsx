@@ -91,6 +91,10 @@ const AddProduct: React.FC<{
           value: activeProduct?.category?.id,
         },
         {
+          name: "supplier",
+          value: activeProduct?.supplier?.id,
+        },
+        {
           name: "manufacturer",
           value: activeProduct.manufacturer,
         },
@@ -208,6 +212,7 @@ const AddProduct: React.FC<{
             </Form.Item>
           </Col>
         </Row>
+
         <Row gutter={16}>
           <Col span={12}>
             <Form.Item
@@ -308,6 +313,56 @@ const AddProduct: React.FC<{
         </Row>
         <Row gutter={16}>
           <Col span={12}>
+            <Form.Item hasFeedback name="blockNo" label="Block No.">
+              <Input
+                className="w-100"
+                size="large"
+                placeholder="please enter block no"
+              />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              hasFeedback
+              name="supplier"
+              label="Supplier"
+              rules={[{ required: true, message: VALIDATION_MESSAGE_INPUT }]}
+            >
+              <Select size="large" placeholder="Please select a supplier">
+                {addProductData?.suppliers?.map((supplier, index) => {
+                  return (
+                    <Option value={supplier?.id} key={index}>
+                      {supplier?.supplierName}
+                    </Option>
+                  );
+                })}
+              </Select>
+            </Form.Item>
+          </Col>
+        </Row>
+
+        <Row gutter={12}>
+          <Col span={12}>
+            <Form.Item hasFeedback name="invoiceNo" label="Invoice No">
+              <Input
+                className="w-100"
+                size="large"
+                placeholder="please enter invoice no"
+              />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item hasFeedback name="invoiceDate" label="Invoice Date">
+              <DatePicker
+                className="w-100"
+                size="large"
+                placeholder="please enter invoice date"
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={16}>
+          <Col span={12}>
             <Form.Item
               hasFeedback
               name="quantityInStock"
@@ -388,42 +443,14 @@ const AddProduct: React.FC<{
             </Form.Item>
           </Col>
         </Row>
+
         <Row gutter={16}>
           <Col span={12}>
-            <Form.Item hasFeedback name="blockNo" label="Block No.">
-              <Input
-                className="w-100"
-                size="large"
-                placeholder="please enter block no"
-              />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item hasFeedback name="invoiceNo" label="Invoice No">
-              <Input
-                className="w-100"
-                size="large"
-                placeholder="please enter invoice no"
-              />
-            </Form.Item>
-          </Col>
-        </Row>
-        <Row gutter={12}>
-          <Col span={12}>
-            <Form.Item hasFeedback name="invoiceDate" label="Invoice Date">
-              <DatePicker
-                className="w-100"
-                size="large"
-                placeholder="please enter invoice date"
-              />
-            </Form.Item>
-          </Col>
-          <Col span={9}>
             <Form.Item hasFeedback name="description" label="Description">
               <Input size="large" placeholder="please enter description" />
             </Form.Item>
           </Col>
-          <Col span={3}>
+          <Col span={12}>
             <Form.Item
               initialValue={true}
               hasFeedback

@@ -7,6 +7,7 @@ import commonReducer from "./commonReducer";
 import customerReducer from "./customerReducer";
 import inventoryReducer from "./inventoryReducer";
 import ordersReducer from "./ordersReducer";
+import supplierReducer from "./supplierReducer";
 
 export const rootReducer = combineReducers({
   commonReducer,
@@ -16,4 +17,5 @@ export const rootReducer = combineReducers({
   commonReducer,
   authenticationReducer,
   customerReducer,
+  supplierReducer,
 });

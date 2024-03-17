@@ -25,6 +25,7 @@ import {
   getNewOrderCreationData,
   placeOrderEpic,
 } from "./ordersEpic";
+import { addSupplier, deleteSupplier, getAllSuppliers } from "./supplierEpics";
 
 export const rootEpic = combineEpics(
   getAllProducts,
@@ -44,5 +45,8 @@ export const rootEpic = combineEpics(
   placeOrderEpic,
   sendOTPtoMail,
   validateOTPEpic,
-  getNewOrderCreationData
+  getNewOrderCreationData,
+  getAllSuppliers,
+  addSupplier,
+  deleteSupplier
 );
