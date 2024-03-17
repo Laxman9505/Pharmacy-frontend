@@ -2,7 +2,10 @@
 
 import axios from "axios";
 export const API = axios.create({
-  baseURL: "https://pharmacy-backend-ten.vercel.app",
+  baseURL:
+    process.env.NODE_ENV == "production"
+      ? "https://pharmacy-backend-ten.vercel.app"
+      : "http://localhost:8000",
   // baseURL: "http://localhost:8000",
 });
 

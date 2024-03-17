@@ -7,7 +7,7 @@ import {
 } from "@ant-design/icons";
 import React from "react";
 import { BiCategory } from "react-icons/bi";
-import { FaStore, FaUserFriends } from "react-icons/fa";
+import { FaHouseUser, FaStore, FaUserFriends } from "react-icons/fa";
 import { SidebarItem } from "../types";
 
 export const sideBarItems: SidebarItem[] = [
@@ -52,6 +52,12 @@ export const sideBarItems: SidebarItem[] = [
     label: "Customers",
     icon: React.createElement(FaUserFriends),
     link: "/manage-customers",
+  },
+  {
+    key: "8",
+    label: "Suppliers",
+    icon: React.createElement(FaHouseUser),
+    link: "/manage-suppliers",
   },
 ];
 
