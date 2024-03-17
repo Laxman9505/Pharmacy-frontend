@@ -2,8 +2,8 @@
 
 import axios from "axios";
 export const API = axios.create({
-  // baseURL: "https://pharmacy-backend-ten.vercel.app",
-  baseURL: "http://localhost:8000",
+  baseURL: "https://pharmacy-backend-ten.vercel.app",
+  // baseURL: "http://localhost:8000",
 });
 
 // API.interceptors.request.use(
