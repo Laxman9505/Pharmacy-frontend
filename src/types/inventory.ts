@@ -18,6 +18,9 @@ export interface Product {
   price: number;
   buyingPrice: number;
   quantity?: number;
+  blockNo?: string;
+  invoiceNo?: string;
+  invoiceDate: string;
 }
 
 export interface ProductCategory {

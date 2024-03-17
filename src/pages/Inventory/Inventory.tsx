@@ -48,7 +48,7 @@ const Inventory = () => {
         dispatch({
           type: "GET_ALL_PRODUCTS_REQUEST",
           payload: {
-            pageSize: 12,
+            pageSize: 30,
             page: 1,
             searchKeyword: searchKeyword,
           },
@@ -211,7 +211,11 @@ const Inventory = () => {
           <LoadingOutlined style={{ fontSize: 24 }} spin={isLoading} />
         }
       >
-        <Table columns={columns} dataSource={data} />
+        <Table
+          columns={columns}
+          dataSource={data}
+          pagination={{ defaultPageSize: 30 }}
+        />
       </Spin>
     </AppLayout>
   );

@@ -46,6 +46,7 @@ const AddProduct: React.FC<{
       ...values,
       manufactureDate: dayjs(values.manufactureDate).format("YYYY-MM-DD"),
       expirationDate: dayjs(values.expirationDate).format("YYYY-MM-DD"),
+      invoiceDate: dayjs(values.invoiceDate).format("YYYY-MM-DD"),
       id: activeProduct ? activeProduct._id : "",
     };
 
@@ -63,7 +64,7 @@ const AddProduct: React.FC<{
       dispatch({
         type: "GET_ALL_PRODUCTS_REQUEST",
         payload: {
-          pageSize: 12,
+          pageSize: 30,
           page: 1,
         },
       });
@@ -102,6 +103,10 @@ const AddProduct: React.FC<{
           value: dayjs(activeProduct.expirationDate),
         },
         {
+          name: "invoiceDate",
+          value: dayjs(activeProduct.invoiceDate),
+        },
+        {
           name: "formulation",
           value: activeProduct.formulation,
         },
@@ -136,6 +141,14 @@ const AddProduct: React.FC<{
         {
           name: "isActive",
           value: activeProduct.isActive,
+        },
+        {
+          name: "blockNo",
+          value: activeProduct.blockNo,
+        },
+        {
+          name: "invoiceNo",
+          value: activeProduct.invoiceNo,
         },
       ]);
     }
@@ -375,13 +388,42 @@ const AddProduct: React.FC<{
             </Form.Item>
           </Col>
         </Row>
-        <Row gutter={12}>
+        <Row gutter={16}>
           <Col span={12}>
-            <Form.Item hasFeedback name="description" label="Description">
-              <Input.TextArea rows={4} placeholder="please enter description" />
+            <Form.Item hasFeedback name="blockNo" label="Block No.">
+              <Input
+                className="w-100"
+                size="large"
+                placeholder="please enter block no"
+              />
             </Form.Item>
           </Col>
           <Col span={12}>
+            <Form.Item hasFeedback name="invoiceNo" label="Invoice No">
+              <Input
+                className="w-100"
+                size="large"
+                placeholder="please enter invoice no"
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={12}>
+          <Col span={12}>
+            <Form.Item hasFeedback name="invoiceDate" label="Invoice Date">
+              <DatePicker
+                className="w-100"
+                size="large"
+                placeholder="please enter invoice date"
+              />
+            </Form.Item>
+          </Col>
+          <Col span={9}>
+            <Form.Item hasFeedback name="description" label="Description">
+              <Input size="large" placeholder="please enter description" />
+            </Form.Item>
+          </Col>
+          <Col span={3}>
             <Form.Item
               initialValue={true}
               hasFeedback
@@ -392,6 +434,7 @@ const AddProduct: React.FC<{
             </Form.Item>
           </Col>
         </Row>
+
         <Row>
           <Space>
             <Button
