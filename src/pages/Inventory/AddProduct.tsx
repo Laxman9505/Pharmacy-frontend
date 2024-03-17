@@ -248,7 +248,7 @@ const AddProduct: React.FC<{
               hasFeedback
               name="formulation"
               label="Formulation"
-              rules={[{ required: true, message: VALIDATION_MESSAGE_INPUT }]}
+              // rules={[{ required: true, message: VALIDATION_MESSAGE_INPUT }]}
             >
               <Input
                 size="large"
@@ -263,12 +263,12 @@ const AddProduct: React.FC<{
               hasFeedback
               name="strength"
               label="Strength"
-              rules={[
-                {
-                  required: true,
-                  message: VALIDATION_MESSAGE_INPUT,
-                },
-              ]}
+              // rules={[
+              //   {
+              //     required: true,
+              //     message: VALIDATION_MESSAGE_INPUT,
+              //   },
+              // ]}
             >
               <Input size="large" placeholder="please enter strength" />
             </Form.Item>
@@ -318,12 +318,12 @@ const AddProduct: React.FC<{
               hasFeedback
               name="barcode"
               label="Barcode number"
-              rules={[
-                {
-                  required: true,
-                  message: VALIDATION_MESSAGE_INPUT,
-                },
-              ]}
+              // rules={[
+              //   {
+              //     required: true,
+              //     message: VALIDATION_MESSAGE_INPUT,
+              //   },
+              // ]}
             >
               <InputNumber
                 className="w-100"

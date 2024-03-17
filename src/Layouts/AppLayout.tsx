@@ -1,7 +1,7 @@
 /** @format */
 
 import { Layout, Menu, theme } from "antd";
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Header from "../components/Header/Header";
 import { sideBarItems } from "../constants/constants";
@@ -10,9 +10,16 @@ const { Content, Footer, Sider } = Layout;
 
 const AppLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
   const { pathname } = useLocation();
+  const [activeKey, setActiveKey] = useState(null);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+
+  useEffect(() => {
+    if (pathname) {
+      setActiveKey(sideBarItems.find((item) => item.link == pathname).key);
+    }
+  }, [pathname]);
 
   return (
     <Layout hasSider>
@@ -37,7 +44,14 @@ const AppLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
           </span>
         </div>
 
-        <Menu theme="dark" mode="inline">
+        <Menu
+          onChange={(e) => {
+            console.log("--e", e);
+          }}
+          theme="dark"
+          mode="inline"
+          selectedKeys={[activeKey]}
+        >
           {sideBarItems.map((item) => (
             <Menu.Item key={item.key} icon={item.icon}>
               <span>

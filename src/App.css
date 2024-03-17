@@ -40,3 +40,6 @@ a {
 .ant-input-affix-wrapper > input.ant-input {
   font-size: 14px;
 }
+.ant-table-tbody .ant-table-cell {
+  font-size: 13px !important;
+}

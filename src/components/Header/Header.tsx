@@ -1,7 +1,6 @@
 /** @format */
 
 import {
-  DownOutlined,
   LogoutOutlined,
   MenuUnfoldOutlined,
   UserOutlined,
@@ -51,12 +50,11 @@ const Header = () => {
         </div>
         <div>
           {" "}
-          <Avatar style={{ backgroundColor: "#87d068" }}>
-            {userDetails?.name?.[0]}
-          </Avatar>
+          <Avatar style={{ backgroundColor: "#87d068" }}>M</Avatar>
           <Dropdown menu={{ items }}>
             <span className="ms-2 cursor-pointer">
-              {userDetails?.name} <DownOutlined />
+              {/* {userDetails?.name} <DownOutlined /> */}
+              Medme Pharmacy
             </span>
           </Dropdown>
         </div>
