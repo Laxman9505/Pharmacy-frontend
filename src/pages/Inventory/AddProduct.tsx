@@ -31,11 +31,15 @@ const AddProduct: React.FC<{
   setIsAddProductOpen: Dispatch<SetStateAction<boolean>>;
   activeProduct: Product | null;
   setActiveProduct: Dispatch<SetStateAction<Product | null>>;
+  page: number;
+  pageSize: number;
 }> = ({
   isAddProductOpen,
   setIsAddProductOpen,
   activeProduct,
   setActiveProduct,
+  page,
+  pageSize,
 }) => {
   const dispatch = useDispatch();
   const [addProductForm] = Form.useForm();
@@ -64,8 +68,8 @@ const AddProduct: React.FC<{
       dispatch({
         type: "GET_ALL_PRODUCTS_REQUEST",
         payload: {
-          pageSize: 30,
-          page: 1,
+          pageSize: pageSize,
+          page: page,
         },
       });
     }

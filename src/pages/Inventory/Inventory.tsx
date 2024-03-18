@@ -14,7 +14,9 @@ import {
   Button,
   Card,
   Col,
+  Flex,
   Input,
+  Pagination,
   Popconfirm,
   Row,
   Space,
@@ -37,6 +39,8 @@ const Inventory = () => {
   const [isAddProductOpen, setIsAddProductOpen] = useState<boolean>(false);
   const [activeProduct, setActiveProduct] = useState<Product | null>(null);
   const [searchKeyword, setSearchKeyword] = useState<string>("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
   const dispatch = useDispatch();
   const { allProducts, totalProducts, isLoading } = useSelector(
     (state: any) => state.inventoryReducer
@@ -48,8 +52,8 @@ const Inventory = () => {
         dispatch({
           type: "GET_ALL_PRODUCTS_REQUEST",
           payload: {
-            pageSize: 30,
-            page: 1,
+            pageSize: pageSize,
+            page: currentPage,
             searchKeyword: searchKeyword,
           },
         });
@@ -60,7 +64,7 @@ const Inventory = () => {
     return () => {
       clearTimeout(handler);
     };
-  }, [searchKeyword, dispatch]);
+  }, [searchKeyword, dispatch, currentPage, pageSize]);
 
   const columns: TableColumnsType<Product> = [
     {
@@ -165,6 +169,16 @@ const Inventory = () => {
     };
   });
 
+  const handlePageChange = (page) => {
+    window.scrollTo(0, 0);
+    setCurrentPage(page);
+  };
+
+  const handlePageSizeChange = (current, size) => {
+    setCurrentPage(currentPage);
+    setPageSize(size);
+  };
+
   console.log("--all products", allProducts);
 
   return (
@@ -174,6 +188,8 @@ const Inventory = () => {
         setIsAddProductOpen={setIsAddProductOpen}
         activeProduct={activeProduct}
         setActiveProduct={setActiveProduct}
+        page={currentPage}
+        pageSize={pageSize}
       />{" "}
       <Typography.Title level={4}>Product List</Typography.Title>
       <Card className="mb-4">
@@ -211,11 +227,23 @@ const Inventory = () => {
           <LoadingOutlined style={{ fontSize: 24 }} spin={isLoading} />
         }
       >
-        <Table
-          columns={columns}
-          dataSource={data}
-          pagination={{ defaultPageSize: 30 }}
-        />
+        <Table columns={columns} dataSource={data} pagination={false} />
+
+        <Flex justify="end">
+          <Pagination
+            className="mt-4"
+            current={currentPage}
+            pageSize={pageSize}
+            total={totalProducts}
+            onChange={handlePageChange}
+            onShowSizeChange={handlePageSizeChange}
+            showSizeChanger
+            pageSizeOptions={["10", "20", "50", "100"]}
+            showTotal={(total, range) =>
+              `${range[0]}-${range[1]} of ${total} products`
+            }
+          />
+        </Flex>
       </Spin>
     </AppLayout>
   );
