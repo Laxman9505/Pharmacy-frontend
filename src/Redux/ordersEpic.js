@@ -53,7 +53,13 @@ export const getNewOrderCreationData = (action$) =>
   action$.pipe(
     ofType("GET_NEW_ORDER_CREATION_DATA_REQUEST"),
     mergeMap((action) =>
-      from(API.get(`/order/getNewOrderCreationData`)).pipe(
+      from(
+        API.get(
+          `/order/getNewOrderCreationData?searchKeyword=${
+            action.payload.searchKeyword ?? ""
+          }`
+        )
+      ).pipe(
         mergeMap((response) => {
           return of({
             type: "GET_NEW_ORDER_CREATION_DATA_SUCCESS",

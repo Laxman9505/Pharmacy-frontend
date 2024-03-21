@@ -11,11 +11,15 @@ const AddSupplier: React.FC<{
   setIsAddSupplierOpen: Dispatch<SetStateAction<boolean>>;
   activeSupplier: Supplier | null;
   setActiveSupplier: Dispatch<SetStateAction<Supplier | null>>;
+  page: number;
+  pageSize: number;
 }> = ({
   isAddSupplierOpen,
   setIsAddSupplierOpen,
   activeSupplier,
   setActiveSupplier,
+  page,
+  pageSize,
 }) => {
   const [addSupplierForm] = Form.useForm();
   const dispatch = useDispatch();
@@ -38,8 +42,8 @@ const AddSupplier: React.FC<{
       dispatch({
         type: "GET_ALL_SUPPLIERS_REQUEST",
         payload: {
-          pageSize: 12,
-          page: 1,
+          pageSize: pageSize,
+          page: page,
         },
       });
     }

@@ -43,3 +43,6 @@ a {
 .ant-table-tbody .ant-table-cell {
   font-size: 13px !important;
 }
+.product-table .ant-table-tbody .ant-table-cell {
+  padding: 4px 16px;
+}

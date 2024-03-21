@@ -11,6 +11,8 @@ import {
   Button,
   Card,
   Col,
+  Flex,
+  Pagination,
   Popconfirm,
   Row,
   Space,
@@ -21,6 +23,7 @@ import {
   Tooltip,
   Typography,
 } from "antd";
+import Search from "antd/es/input/Search";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import AppLayout from "../../Layouts/AppLayout";
@@ -30,20 +33,33 @@ import AddSupplier from "./AddSupplier";
 const Suppliers = () => {
   const [isAddSupplierOpen, setIsAddSupplierOpen] = useState<boolean>(false);
   const [activeSupplier, setActiveSupplier] = useState<Supplier | null>(null);
+  const [searchKeyword, setSearchKeyword] = useState<string>("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const dispatch = useDispatch();
   const { allSuppliers, totalSuppliers, isLoading } = useSelector(
     (state: any) => state.supplierReducer
   );
 
   useEffect(() => {
-    dispatch({
-      type: "GET_ALL_SUPPLIERS_REQUEST",
-      payload: {
-        pageSize: 12,
-        page: 1,
+    const handler = setTimeout(
+      () => {
+        dispatch({
+          type: "GET_ALL_SUPPLIERS_REQUEST",
+          payload: {
+            pageSize: pageSize,
+            page: currentPage,
+            searchKeyword: searchKeyword,
+          },
+        });
       },
-    });
-  }, [dispatch]);
+      searchKeyword ? 1000 : 0
+    );
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchKeyword, dispatch, currentPage, pageSize]);
 
   const columns: TableColumnsType<Supplier> = [
     {
@@ -114,6 +130,16 @@ const Suppliers = () => {
     };
   });
 
+  const handlePageChange = (page) => {
+    window.scrollTo(0, 0);
+    setCurrentPage(page);
+  };
+
+  const handlePageSizeChange = (current, size) => {
+    setCurrentPage(currentPage);
+    setPageSize(size);
+  };
+
   return (
     <AppLayout>
       <AddSupplier
@@ -121,6 +147,8 @@ const Suppliers = () => {
         setIsAddSupplierOpen={setIsAddSupplierOpen}
         setActiveSupplier={setActiveSupplier}
         activeSupplier={activeSupplier}
+        page={currentPage}
+        pageSize={pageSize}
       />
       <Typography.Title level={4}>Suppliers List</Typography.Title>
       <Card className="mb-4">
@@ -137,6 +165,19 @@ const Suppliers = () => {
               Add Supplier
             </Button>
           </Col>
+          <Col span={12}>
+            <Row justify={"end"}>
+              <Space>
+                <Search
+                  value={searchKeyword}
+                  onChange={(e) => setSearchKeyword(e.target.value)}
+                  placeholder="Search by supplier "
+                  enterButton="Search"
+                  size="large"
+                />
+              </Space>
+            </Row>
+          </Col>
         </Row>
       </Card>
       <Spin
@@ -145,7 +186,22 @@ const Suppliers = () => {
           <LoadingOutlined style={{ fontSize: 24 }} spin={isLoading} />
         }
       >
-        <Table columns={columns} dataSource={data} />
+        <Table columns={columns} dataSource={data} pagination={false} />
+        <Flex justify="end">
+          <Pagination
+            className="mt-4"
+            current={currentPage}
+            pageSize={pageSize}
+            total={totalSuppliers}
+            onChange={handlePageChange}
+            onShowSizeChange={handlePageSizeChange}
+            showSizeChanger
+            pageSizeOptions={["10", "20", "50", "100"]}
+            showTotal={(total, range) =>
+              `${range[0]}-${range[1]} of ${total} suppliers`
+            }
+          />
+        </Flex>
       </Spin>
     </AppLayout>
   );

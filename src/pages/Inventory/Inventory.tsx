@@ -40,7 +40,7 @@ const Inventory = () => {
   const [activeProduct, setActiveProduct] = useState<Product | null>(null);
   const [searchKeyword, setSearchKeyword] = useState<string>("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(20);
+  const [pageSize, setPageSize] = useState(10);
   const dispatch = useDispatch();
   const { allProducts, totalProducts, isLoading } = useSelector(
     (state: any) => state.inventoryReducer

@@ -29,7 +29,7 @@ import { getCurrentFullDate } from "../../utils/helpers";
 import CartItem from "./CartItem";
 import OrderReciept from "./OrderReciept";
 import PayOrder from "./PayOrder";
-import ProductCard from "./ProductCard";
+import ProductTable from "./ProductTable";
 
 const NewOrder = () => {
   const dispatch = useDispatch();
@@ -38,14 +38,28 @@ const NewOrder = () => {
   const { getNewOrderCreationDataLoading, newOrderCreationData } = useSelector(
     (state: any) => state.ordersReducer
   );
+  const [searchKeyword, setSearchKeyword] = useState<string>("");
+
   const { calculateItemsSubtotal, clearCart } = useCartActions();
   const { cartProducts } = useSelector((state: any) => state.cartReducer);
 
   useEffect(() => {
-    dispatch({
-      type: "GET_NEW_ORDER_CREATION_DATA_REQUEST",
-    });
-  }, []);
+    const handler = setTimeout(
+      () => {
+        dispatch({
+          type: "GET_NEW_ORDER_CREATION_DATA_REQUEST",
+          payload: {
+            searchKeyword: searchKeyword,
+          },
+        });
+      },
+      searchKeyword ? 1000 : 0
+    );
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchKeyword, dispatch]);
 
   const onChange = (key: string) => {
     console.log(key);
@@ -56,17 +70,7 @@ const NewOrder = () => {
       return {
         key: proCat?.categoryId,
         label: proCat?.categoryName,
-        children: (
-          <Row gutter={[16, 24]}>
-            {proCat?.products?.map((product) => {
-              return (
-                <Col span={6} key={product?._id}>
-                  <ProductCard product={product} />
-                </Col>
-              );
-            })}
-          </Row>
-        ),
+        children: <ProductTable products={proCat.products} />,
       };
     });
 
@@ -95,6 +99,8 @@ const NewOrder = () => {
           <Row className="mt-2">
             <Col span={12}>
               <Input
+                value={searchKeyword}
+                onChange={(e) => setSearchKeyword(e.target.value)}
                 size="large"
                 placeholder="Search for products..."
                 prefix={<SearchOutlined />}
@@ -102,7 +108,12 @@ const NewOrder = () => {
             </Col>
           </Row>
           <Row className="mt-3">
-            <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
+            <Tabs
+              className="w-100"
+              defaultActiveKey="1"
+              items={items}
+              onChange={onChange}
+            />
           </Row>
         </Col>
         <Col span={9}>

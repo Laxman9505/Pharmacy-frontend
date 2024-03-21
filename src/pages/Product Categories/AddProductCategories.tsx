@@ -11,11 +11,15 @@ const AddProductCategories: React.FC<{
   setIsAddProductCategoryOpen: Dispatch<SetStateAction<boolean>>;
   activeProductCategory: ProductCategory | null;
   setActiveProductCategory: Dispatch<SetStateAction<ProductCategory | null>>;
+  page: number;
+  pageSize: number;
 }> = ({
   isAddProductCategoryOpen,
   setIsAddProductCategoryOpen,
   setActiveProductCategory,
   activeProductCategory,
+  page,
+  pageSize,
 }) => {
   const [addProductCategoryForm] = Form.useForm();
   const dispatch = useDispatch();
@@ -38,8 +42,8 @@ const AddProductCategories: React.FC<{
       dispatch({
         type: "GET_ALL_PRODUCT_CATEGORIES_REQUEST",
         payload: {
-          pageSize: 12,
-          page: 1,
+          pageSize: pageSize,
+          page: page,
         },
       });
     }

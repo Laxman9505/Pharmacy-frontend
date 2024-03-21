@@ -11,11 +11,15 @@ const AddCustomer: React.FC<{
   setIsAddCustomerOpen: Dispatch<SetStateAction<boolean>>;
   activeCustomer: Customer | null;
   setActiveCustomer: Dispatch<SetStateAction<Customer | null>>;
+  page: number;
+  pageSize: number;
 }> = ({
   isAddCustomerOpen,
   setIsAddCustomerOpen,
   activeCustomer,
   setActiveCustomer,
+  page,
+  pageSize,
 }) => {
   const [addCustomerForm] = Form.useForm();
   const dispatch = useDispatch();
@@ -38,8 +42,8 @@ const AddCustomer: React.FC<{
       dispatch({
         type: "GET_ALL_CUSTOMERS_REQUEST",
         payload: {
-          pageSize: 12,
-          page: 1,
+          pageSize: pageSize,
+          page: page,
         },
       });
     }
@@ -110,12 +114,7 @@ const AddCustomer: React.FC<{
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item
-              initialValue={true}
-              hasFeedback
-              name={"lastName"}
-              label="Last Name"
-            >
+            <Form.Item hasFeedback name={"lastName"} label="Last Name">
               <Input size="large" placeholder="Please enter last name" />
             </Form.Item>
           </Col>
@@ -133,12 +132,7 @@ const AddCustomer: React.FC<{
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item
-              initialValue={true}
-              hasFeedback
-              name={"phoneNumber"}
-              label="Phone Number"
-            >
+            <Form.Item hasFeedback name={"phoneNumber"} label="Phone Number">
               <Input size="large" placeholder="Please enter phone" />
             </Form.Item>
           </Col>
@@ -146,12 +140,7 @@ const AddCustomer: React.FC<{
 
         <Row>
           <Col span={12}>
-            <Form.Item
-              initialValue={true}
-              hasFeedback
-              name={"address"}
-              label="Address"
-            >
+            <Form.Item hasFeedback name={"address"} label="Address">
               <Input size="large" placeholder="Please enter address" />
             </Form.Item>
           </Col>

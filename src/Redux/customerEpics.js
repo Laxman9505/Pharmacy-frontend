@@ -11,7 +11,9 @@ export const getAllCustomers = (action$) =>
     mergeMap((action) =>
       from(
         API.get(
-          `/customer/getAllCustomers?page=${action.payload.page}&pageSize=${action.payload.pageSize}&searchKeyword=${action.payload.searchKeyword}`
+          `/customer/getAllCustomers?page=${action.payload.page}&pageSize=${
+            action.payload.pageSize
+          }&searchKeyword=${action.payload.searchKeyword ?? ""}`
         )
       ).pipe(
         mergeMap((response) => {
