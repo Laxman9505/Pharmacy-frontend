@@ -10,6 +10,7 @@ import {
   Empty,
   Flex,
   Input,
+  InputNumber,
   Radio,
   Row,
   Space,
@@ -23,9 +24,9 @@ import { MdOutlineQrCode2, MdPhoneIphone } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import AppLayout from "../../Layouts/AppLayout";
 import { showConfirmClearCart } from "../../components/Confirmation/ClearCart.js";
-import { CURRENCY_SYMBOL } from "../../constants/constants";
+import { CURRENCY_SYMBOL, PAYMENT_METHODS } from "../../constants/constants";
 import useCartActions from "../../hooks/cartActions";
-import { getCurrentFullDate } from "../../utils/helpers";
+import { getCurrentFullDate, toStringAsFixed } from "../../utils/helpers";
 import CartItem from "./CartItem";
 import OrderReciept from "./OrderReciept";
 import PayOrder from "./PayOrder";
@@ -33,14 +34,25 @@ import ProductTable from "./ProductTable";
 
 const NewOrder = () => {
   const dispatch = useDispatch();
+  const { calculateItemsSubtotal, clearCart } = useCartActions();
+  const { isPlaceOrderSuccess } = useSelector(
+    (state: any) => state.ordersReducer
+  );
   const [isPayOrderOpen, setIsPayOrderOpen] = useState(false);
   const [isOrderReceiptOpen, setIsOrderReceiptOpen] = useState(false);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>(
+    PAYMENT_METHODS.CASH
+  );
   const { getNewOrderCreationDataLoading, newOrderCreationData } = useSelector(
     (state: any) => state.ordersReducer
   );
+  const subtotalAmount: number = calculateItemsSubtotal();
+  const [discountAmount, setDiscountAmount] = useState<number>(0);
+  const [discountPercentage, setDiscountPercentage] = useState<number>(0);
+  const [totalPayableAmount, setTotalPayableAmount] = useState<number>(0);
+
   const [searchKeyword, setSearchKeyword] = useState<string>("");
 
-  const { calculateItemsSubtotal, clearCart } = useCartActions();
   const { cartProducts } = useSelector((state: any) => state.cartReducer);
 
   useEffect(() => {
@@ -66,13 +78,29 @@ const NewOrder = () => {
   };
 
   const items: TabsProps["items"] =
-    newOrderCreationData?.productsWithCategories?.map((proCat) => {
+    newOrderCreationData?.productsWithCategories?.map((proCat, index) => {
       return {
-        key: proCat?.categoryId,
+        key: proCat?.categoryId ?? index,
         label: proCat?.categoryName,
-        children: <ProductTable products={proCat.products} />,
+        children: <ProductTable products={proCat.products} key={index} />,
       };
     });
+
+  useEffect(() => {
+    const discountAmount = (discountPercentage / 100) * subtotalAmount;
+    setDiscountAmount(discountAmount);
+  }, [discountPercentage, subtotalAmount]);
+
+  useEffect(() => {
+    setTotalPayableAmount(subtotalAmount - discountAmount);
+  }, [discountAmount, subtotalAmount]);
+
+  useEffect(() => {
+    if (isPlaceOrderSuccess) {
+      setDiscountPercentage(0);
+      setDiscountAmount(0);
+    }
+  }, [isPlaceOrderSuccess]);
 
   console.log("--cart products", cartProducts);
   return (
@@ -81,6 +109,10 @@ const NewOrder = () => {
         isPayOrderOpen={isPayOrderOpen}
         setIsPayOrderOpen={setIsPayOrderOpen}
         setIsOrderReceiptOpen={setIsOrderReceiptOpen}
+        totalPaymentAmount={totalPayableAmount}
+        discountAmount={discountAmount}
+        discountPercentage={discountPercentage}
+        selectedPaymentMethod={selectedPaymentMethod}
       />
 
       <OrderReciept
@@ -143,7 +175,9 @@ const NewOrder = () => {
             >
               {cartProducts?.length > 0 ? (
                 cartProducts?.map((cartProduct, index) => {
-                  return <CartItem product={cartProduct} index={index} />;
+                  return (
+                    <CartItem product={cartProduct} index={index} key={index} />
+                  );
                 })
               ) : (
                 <Empty description="Cart is empty. Cart products will appear here !" />
@@ -154,37 +188,53 @@ const NewOrder = () => {
                 <Row justify={"space-between"}>
                   <Typography.Text type="secondary">Subtotal:</Typography.Text>
                   <Typography.Text strong>
-                    {CURRENCY_SYMBOL} {calculateItemsSubtotal()}
+                    {CURRENCY_SYMBOL} {toStringAsFixed(subtotalAmount)}
                   </Typography.Text>
                 </Row>
-                <Row justify={"space-between"}>
+                <Row justify={"space-between"} align={"middle"}>
                   <Typography.Text type="secondary">Discount:</Typography.Text>
-                  <Typography.Text strong>Rs 0</Typography.Text>
+                  <Space>
+                    <InputNumber
+                      suffix="%"
+                      max={100}
+                      min={0}
+                      value={discountPercentage}
+                      onChange={(e) => setDiscountPercentage(e)}
+                    />
+                    <Typography.Text strong>
+                      {CURRENCY_SYMBOL} {toStringAsFixed(discountAmount)}
+                    </Typography.Text>
+                  </Space>
                 </Row>
                 <Divider className="m-2" />
                 <Row justify={"space-between"}>
                   <Typography.Text strong>Total Payable:</Typography.Text>
                   <Typography.Text strong>
                     {" "}
-                    {CURRENCY_SYMBOL} {calculateItemsSubtotal()}
+                    {CURRENCY_SYMBOL} {toStringAsFixed(totalPayableAmount)}
                   </Typography.Text>
                 </Row>
               </Card>
               <Card className="w-100 mt-2" title="Payment Method">
                 <Space>
-                  <Radio.Group defaultValue="a" size="middle">
-                    <Radio.Button value="a">
+                  <Radio.Group
+                    defaultValue={PAYMENT_METHODS.CASH}
+                    size="middle"
+                    value={selectedPaymentMethod}
+                    onChange={(e) => setSelectedPaymentMethod(e.target.value)}
+                  >
+                    <Radio.Button value={PAYMENT_METHODS.CASH}>
                       <Space>
                         <IoCashOutline /> Cash
                       </Space>{" "}
                     </Radio.Button>
-                    <Radio.Button value="b">
+                    <Radio.Button value={PAYMENT_METHODS.ESEWA}>
                       <Space>
                         <MdOutlineQrCode2 />
                         E-sewa
                       </Space>
                     </Radio.Button>
-                    <Radio.Button value="c">
+                    <Radio.Button value={PAYMENT_METHODS.PHONEPAY}>
                       <Space>
                         <MdPhoneIphone />
                         FonePay

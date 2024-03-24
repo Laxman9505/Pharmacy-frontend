@@ -16,3 +16,35 @@ export const getCurrentFullDate = () => {
   );
   return formattedDate;
 };
+export const toStringAsFixed = (amount: number | string): string | null => {
+  if (isNaN(Number(amount))) {
+    return "0.00";
+  }
+
+  if (typeof amount === "number") {
+    return amount.toFixed(2).toString();
+  } else if (typeof amount === "string") {
+    const parsedAmount = parseFloat(amount);
+    if (!isNaN(parsedAmount)) {
+      return parsedAmount.toFixed(2).toString();
+    }
+  }
+
+  return null;
+};
+export const toNumberAsFixed = (amount: number | string): number | null => {
+  if (isNaN(Number(amount))) {
+    return 0.0;
+  }
+
+  if (typeof amount === "number") {
+    return parseFloat(amount.toFixed(2));
+  } else if (typeof amount === "string") {
+    const parsedAmount = parseFloat(amount);
+    if (!isNaN(parsedAmount)) {
+      return Number(parsedAmount.toFixed(2));
+    }
+  }
+
+  return null;
+};

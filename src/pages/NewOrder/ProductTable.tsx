@@ -18,17 +18,21 @@ const ProductTable: React.FC<{ products: Product[] }> = ({ products }) => {
     {
       title: "Product Name",
       dataIndex: "name",
+      key: 1,
     },
     {
       title: "Price",
       dataIndex: "price",
+      key: 2,
     },
     {
       title: "Stock",
       dataIndex: "quantityInStock",
+      key: 3,
     },
     {
       title: "Action",
+      key: 4,
       dataIndex: "isActive",
       render: (_, record) => (
         <Button type="default" onClick={() => addToCartHandler(record)}>
@@ -40,6 +44,7 @@ const ProductTable: React.FC<{ products: Product[] }> = ({ products }) => {
 
   return (
     <Table
+      key={2}
       className="product-table"
       columns={columns}
       dataSource={products}
