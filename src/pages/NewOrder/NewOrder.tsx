@@ -35,7 +35,7 @@ import ProductTable from "./ProductTable";
 const NewOrder = () => {
   const dispatch = useDispatch();
   const { calculateItemsSubtotal, clearCart } = useCartActions();
-  const { isPlaceOrderSuccess } = useSelector(
+  const { isPlaceOrderSuccess, placeOrderResponse } = useSelector(
     (state: any) => state.ordersReducer
   );
   const [isPayOrderOpen, setIsPayOrderOpen] = useState(false);
@@ -102,6 +102,12 @@ const NewOrder = () => {
     }
   }, [isPlaceOrderSuccess]);
 
+  useEffect(() => {
+    if (placeOrderResponse?.isPaymentCompleted) {
+      setIsOrderReceiptOpen(true);
+    }
+  }, [placeOrderResponse]);
+
   console.log("--cart products", cartProducts);
   return (
     <AppLayout>
@@ -113,6 +119,7 @@ const NewOrder = () => {
         discountAmount={discountAmount}
         discountPercentage={discountPercentage}
         selectedPaymentMethod={selectedPaymentMethod}
+        orderNo={newOrderCreationData?.orderNo}
       />
 
       <OrderReciept
@@ -123,7 +130,9 @@ const NewOrder = () => {
       <Row className="new-orde r-container" gutter={10}>
         <Col span={15}>
           <Row justify={"space-between"}>
-            <Typography.Title level={4}>Order No: #0005</Typography.Title>
+            <Typography.Title level={4}>
+              Order No: {newOrderCreationData?.orderNo}
+            </Typography.Title>
             <Typography.Text type="secondary">
               {getCurrentFullDate()}
             </Typography.Text>

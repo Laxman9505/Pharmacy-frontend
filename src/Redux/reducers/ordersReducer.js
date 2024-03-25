@@ -82,12 +82,15 @@ export default function (state = initialState, action) {
         isPlaceOrderSuccess: false,
       };
     case "PLACE_ORDER_SUCCESS":
-      openNotificationWithIcon("success", payload?.msg);
+      if (!payload?.isPaymentCompleted) {
+        openNotificationWithIcon("success", payload?.msg);
+      }
 
       return {
         ...state,
         placeOrderLoading: false,
         isPlaceOrderSuccess: true,
+        placeOrderResponse: payload,
       };
     case "PLACE_ORDER_FAILURE":
       openNotificationWithIcon("error", "Something Went Wrong");
@@ -96,6 +99,13 @@ export default function (state = initialState, action) {
         ...state,
         placeOrderLoading: false,
         isPlaceOrderSuccess: false,
+      };
+
+    case "CLEAR_ORDER_REDUCER":
+      return {
+        ...state,
+        isPlaceOrderSuccess: false,
+        placeOrderResponse: {},
       };
     default:
       return state;
