@@ -112,7 +112,7 @@ const Orders = () => {
             <Segmented<string>
               options={["All Orders", "Completed", "Pending", "Cancelled"]}
               onChange={(value) => {
-                console.log(value); // string
+                console.log(value);
               }}
             />
           </Col>
