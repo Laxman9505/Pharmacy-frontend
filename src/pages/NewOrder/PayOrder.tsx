@@ -21,7 +21,7 @@ import {
 } from "../../constants/constants";
 import useCartActions from "../../hooks/cartActions";
 import { CustomerDataModel, PayOrderRequest } from "../../types/order";
-import { toNumberAsFixed } from "../../utils/helpers";
+import { toNumberAsFixed, toStringAsFixed } from "../../utils/helpers";
 import ChooseCustomer from "./ChooseCustomer";
 
 const PayOrder: React.FC<{
@@ -32,6 +32,7 @@ const PayOrder: React.FC<{
   discountPercentage: number;
   selectedPaymentMethod: string;
   totalPaymentAmount: number;
+  orderNo: string;
 }> = ({
   isPayOrderOpen,
   setIsPayOrderOpen,
@@ -40,6 +41,7 @@ const PayOrder: React.FC<{
   discountAmount,
   discountPercentage,
   selectedPaymentMethod,
+  orderNo,
 }) => {
   const dispatch = useDispatch();
   const [payOrderForm] = Form.useForm();
@@ -88,12 +90,16 @@ const PayOrder: React.FC<{
 
   useEffect(() => {
     if (totalPaymentAmount) {
-      payOrderForm.setFieldValue("paidAmount", totalPaymentAmount);
+      payOrderForm.setFieldValue(
+        "paidAmount",
+        toStringAsFixed(totalPaymentAmount)
+      );
     }
   }, [totalPaymentAmount]);
 
   const PayOrderHandler = (values) => {
     const payOrderRequest = {
+      orderNo: orderNo,
       discountAmount: toNumberAsFixed(discountAmount),
       discountPercentage: toNumberAsFixed(discountPercentage ?? 0),
       customerDataModel: {
@@ -243,7 +249,7 @@ const PayOrder: React.FC<{
               <Space>
                 <Typography.Text strong>Payment Amount</Typography.Text>
                 <Typography.Text strong type="danger" style={{ fontSize: 25 }}>
-                  {CURRENCY_SYMBOL} {totalPaymentAmount}
+                  {CURRENCY_SYMBOL} {toStringAsFixed(totalPaymentAmount)}
                 </Typography.Text>
               </Space>
             }

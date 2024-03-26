@@ -2,6 +2,8 @@
 
 import { Col, Divider, Drawer, Row, Typography } from "antd";
 import React, { Dispatch, SetStateAction } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { CURRENCY_SYMBOL, THEME_COLOR } from "../../constants/constants";
 
 const { Title, Paragraph } = Typography;
 
@@ -9,64 +11,122 @@ const OrderReciept: React.FC<{
   isOrderReceiptOpen: boolean;
   setIsOrderReceiptOpen: Dispatch<SetStateAction<boolean>>;
 }> = ({ isOrderReceiptOpen, setIsOrderReceiptOpen }) => {
-  const productList = [
-    { name: "Product 1", quantity: 2, price: 10 },
-    { name: "Product 2", quantity: 1, price: 15 },
-    { name: "Product 3", quantity: 3, price: 8 },
-  ];
+  const dispatch = useDispatch();
+  const { placeOrderResponse } = useSelector(
+    (state: any) => state.ordersReducer
+  );
+  const orderReceipt = placeOrderResponse?.receipt;
+
+  const productList = orderReceipt?.products?.map((product, index) => {
+    return {
+      name: product.productName,
+      quantity: product.quantity,
+      price: product.boughtPrice,
+    };
+  });
 
   // Calculate total amount
-  const subTotal = productList.reduce(
+  const subTotal = productList?.reduce(
     (acc, item) => acc + item.quantity * item.price,
     0
   );
-  const discount = 5; // Example discount percentage
-  const totalAmount = subTotal - (subTotal * discount) / 100;
   return (
     <>
       <Drawer
         title="Payment Reciept"
-        onClose={() => setIsOrderReceiptOpen(false)}
+        onClose={() => {
+          dispatch({ type: "CLEAR_ORDER_REDUCER" });
+          setIsOrderReceiptOpen(false);
+        }}
         open={isOrderReceiptOpen}
+        bodyStyle={{ background: THEME_COLOR, padding: 8 }}
       >
-        <div style={{ margin: "auto" }}>
+        <div
+          className="ms-2 mt-2 mb-2"
+          style={{ margin: "auto", background: "white", padding: 15 }}
+        >
           {/* Store Information */}
-          <Title level={3} style={{ textAlign: "center" }}>
+          <Title
+            level={3}
+            style={{
+              textAlign: "center",
+              marginBottom: "0",
+            }}
+          >
             Pharmacy XYZ
           </Title>
-          <Paragraph style={{ textAlign: "center" }}>
+          <Paragraph
+            style={{
+              textAlign: "center",
+              lineHeight: "1.6",
+              marginBottom: "0",
+            }}
+          >
             123 Pharmacy Street, Cityville
           </Paragraph>
-          <Paragraph style={{ textAlign: "center" }}>
+          <Paragraph
+            style={{
+              textAlign: "center",
+              lineHeight: "1.6",
+              marginBottom: "0",
+            }}
+          >
             Phone: (123) 456-7890
           </Paragraph>
 
           {/* Header Text */}
-          <Divider />
-          <Paragraph style={{ textAlign: "center", fontStyle: "italic" }}>
-            Your Trusted Health Partner
+          <Divider className="m-3 ms-0" />
+          <Paragraph
+            style={{
+              lineHeight: "1.6",
+              marginBottom: "0",
+            }}
+          >
+            Order Date : {orderReceipt?.orderDate}
           </Paragraph>
-          <Divider />
+          <Paragraph
+            style={{
+              lineHeight: "1.6",
+              marginBottom: "0",
+            }}
+          >
+            Order No : {orderReceipt?.orderNo}
+          </Paragraph>
+          <Paragraph
+            style={{
+              marginBottom: "0",
+            }}
+          >
+            Customer Name : {orderReceipt?.customerName}
+          </Paragraph>
+          <Paragraph
+            style={{
+              marginBottom: "0",
+            }}
+          >
+            Payment Method : {orderReceipt?.paymentMethod}
+          </Paragraph>
+          <Divider className="m-3 ms-0" />
           <Row style={{ marginBottom: "8px" }}>
             <Col span={12}>
               <Typography.Text strong>Item Name</Typography.Text>{" "}
             </Col>
             <Col span={6}>
               {" "}
-              <Typography.Text strong>Quantity</Typography.Text>
+              <Typography.Text strong>QTY</Typography.Text>
             </Col>
             <Col span={6} style={{ textAlign: "right" }}>
               <Typography.Text strong>Price</Typography.Text>
             </Col>
           </Row>
           <div style={{ marginBottom: "20px" }}>
-            {productList.map((product) => (
+            {productList?.map((product) => (
               <div key={product.name} style={{ marginBottom: "8px" }}>
                 <Row>
                   <Col span={12}>{product.name}</Col>
                   <Col span={6}>{product.quantity}</Col>
                   <Col span={6} style={{ textAlign: "right" }}>
-                    ${product.price.toFixed(2)}
+                    {CURRENCY_SYMBOL} {product.price.toFixed(2)}
                   </Col>
                 </Row>
               </div>
@@ -79,26 +139,32 @@ const OrderReciept: React.FC<{
           {/* Total Section */}
           <Row gutter={[16, 16]}>
             <Col span={12}>
-              <Title level={4}>Subtotal</Title>
+              <Typography.Text strong>Subtotal</Typography.Text>
             </Col>
             <Col span={12} style={{ textAlign: "right" }}>
-              <Title level={4}>${subTotal}</Title>
+              <Typography.Text strong>
+                {CURRENCY_SYMBOL} {subTotal}
+              </Typography.Text>
             </Col>
           </Row>
           <Row gutter={[16, 16]}>
             <Col span={12}>
-              <Title level={4}>Discount</Title>
+              <Typography.Text strong>Discount</Typography.Text>
             </Col>
             <Col span={12} style={{ textAlign: "right" }}>
-              <Title level={4}>-${(subTotal * discount) / 100}</Title>
+              <Typography.Text strong>
+                - {CURRENCY_SYMBOL} {orderReceipt?.discountAmount ?? 0}
+              </Typography.Text>
             </Col>
           </Row>
           <Row gutter={[16, 16]}>
             <Col span={12}>
-              <Title level={3}>Total</Title>
+              <Title level={5}>Total</Title>
             </Col>
             <Col span={12} style={{ textAlign: "right" }}>
-              <Title level={3}>${totalAmount}</Title>
+              <Title level={5}>
+                {CURRENCY_SYMBOL} {orderReceipt?.totalPaymentAmount}
+              </Title>
             </Col>
           </Row>
 

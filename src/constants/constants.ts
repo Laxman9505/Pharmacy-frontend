@@ -65,6 +65,7 @@ export const VALIDATION_MESSAGE_INPUT = "This must not be empty !";
 export const DATE_FORMAT = "YYYY/MM/DD";
 export const CURRENCY_SYMBOL = "Rs";
 export const PRIMARY_BUTTOM_COLOR = "#00b96b";
+export const THEME_COLOR = "#00b96b";
 
 export const ORDER_STATUS = {
   PENDING: "Pending",
