@@ -1,107 +1,174 @@
 /** @format */
 
-import { PrinterOutlined } from "@ant-design/icons";
 import {
+  DeleteOutlined,
+  EditOutlined,
+  EyeOutlined,
+  LoadingOutlined,
+  PrinterOutlined,
+  QuestionOutlined,
+} from "@ant-design/icons";
+import {
+  Button,
   Card,
   Col,
   DatePicker,
   DatePickerProps,
   Divider,
+  Flex,
   Input,
+  Pagination,
+  Popconfirm,
   Row,
   Segmented,
   Space,
+  Spin,
   Table,
   TableColumnsType,
+  Tag,
+  Tooltip,
   Typography,
 } from "antd";
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import AppLayout from "../../Layouts/AppLayout";
+import { useDispatch, useSelector } from "react-redux";
+import { Order } from "../../types/order";
+import { CURRENCY_SYMBOL, DATE_FORMAT } from "../../constants/constants";
+import dayjs from "dayjs";
+import { MdCancel, MdOutlineCancel } from "react-icons/md";
 
 const { Search } = Input;
 
-interface DataType {
-  key: React.Key;
-  name: string;
-  age: number;
-  address: string;
-  action: ReactNode;
-}
-
-const columns: TableColumnsType<DataType> = [
+const columns: TableColumnsType<Order> = [
   {
-    title: "Name",
-    dataIndex: "name",
-    render: (text: string) => <a>{text}</a>,
+    title: "Order No",
+    dataIndex: "orderNo",
   },
   {
-    title: "Age",
-    dataIndex: "age",
+    title: "Customer Name",
+    dataIndex: "customerName",
+    render: (_, record) => (
+      <Space size="middle">
+        {record.customerDataModel.firstName
+          ? `${record.customerDataModel.firstName} ${record.customerDataModel.lastName}`
+          : `N/A`}
+      </Space>
+    ),
   },
   {
-    title: "Address",
-    dataIndex: "address",
+    title: "Order Date",
+    dataIndex: "orderDate",
+    render: (_, record) => (
+      <Space size="middle">{dayjs(record.orderDate).format(DATE_FORMAT)}</Space>
+    ),
+  },
+  {
+    title: "Amount",
+    dataIndex: "totalPaymentAmount",
+    render: (_, record) => (
+      <Space>
+        {" "}
+        {record.totalPaymentAmount
+          ? `${CURRENCY_SYMBOL} ${record.totalPaymentAmount}`
+          : "N/A"}
+      </Space>
+    ),
+  },
+  {
+    title: "Payment Method",
+    dataIndex: "paymentMethod",
+  },
+  {
+    title: "Order Status",
+    dataIndex: "orderStatus",
+    render: (_, record) => (
+      <Space size="middle">
+        {record.orderStatus == "Completed" ? (
+          <Tag color="green"> Completed</Tag>
+        ) : (
+          <Tag color="red">Payment Pending</Tag>
+        )}
+      </Space>
+    ),
   },
   {
     title: "Action",
-    dataIndex: "action",
-  },
-];
+    dataIndex: "isActive",
+    render: (_, record) => (
+      <Space>
+        <Tooltip title="View Order">
+          <Button
+            type="default"
+            icon={<EyeOutlined />}
+            onClick={() => {
+              // setActiveProduct(record);
+              // setIsAddProductOpen(true);
+            }}
+          ></Button>
+        </Tooltip>
 
-const data: DataType[] = [
-  {
-    key: "1",
-    name: "John Brown",
-    age: 32,
-    address: "New York No. 1 Lake Park",
-    action: (
-      <div>
-        <PrinterOutlined />
-      </div>
-    ),
-  },
-  {
-    key: "2",
-    name: "Jim Green",
-    age: 42,
-    address: "London No. 1 Lake Park",
-
-    action: (
-      <div>
-        {" "}
-        <PrinterOutlined />
-      </div>
-    ),
-  },
-  {
-    key: "3",
-    name: "Joe Black",
-    age: 32,
-    address: "Sydney No. 1 Lake Park",
-    action: (
-      <div>
-        {" "}
-        <PrinterOutlined />
-      </div>
-    ),
-  },
-  {
-    key: "4",
-    name: "Disabled User",
-    age: 99,
-    address: "Sydney No. 1 Lake Park",
-    action: (
-      <div>
-        {" "}
-        <PrinterOutlined />
-      </div>
+        <Tooltip title="Print Order">
+          <Button icon={<PrinterOutlined />}></Button>
+        </Tooltip>
+        <Tooltip title="Cancel Order">
+          <Popconfirm
+            title="Cancel Order"
+            description={`Are you sure want to cancel order  ${record.orderNo} ?`}
+            icon={<MdOutlineCancel style={{ color: "red" }} />}
+            onConfirm={() => {}}
+          >
+            <Button danger icon={<MdOutlineCancel />}></Button>
+          </Popconfirm>
+        </Tooltip>
+      </Space>
     ),
   },
 ];
 
 const Orders = () => {
-  const onChange: DatePickerProps["onChange"] = (date, dateString) => {
-    console.log(date, dateString);
+  const dispatch = useDispatch();
+  const { isLoading, totalOrders, allOrders } = useSelector(
+    (state: any) => state.ordersReducer
+  );
+  const [searchKeyword, setSearchKeyword] = useState<string>("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
+  useEffect(() => {
+    const handler = setTimeout(
+      () => {
+        dispatch({
+          type: "GET_ALL_ORDERS_REQUEST",
+          payload: {
+            pageSize: pageSize,
+            page: currentPage,
+            searchKeyword: searchKeyword,
+          },
+        });
+      },
+      searchKeyword ? 1000 : 0
+    );
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchKeyword, dispatch, currentPage, pageSize]);
+
+  const data: Order[] = allOrders?.map((order: Order, index) => {
+    return {
+      ...order,
+      key: index,
+    };
+  });
+
+  const handlePageChange = (page) => {
+    window.scrollTo(0, 0);
+    setCurrentPage(page);
+  };
+
+  const handlePageSizeChange = (current, size) => {
+    setCurrentPage(currentPage);
+    setPageSize(size);
   };
   return (
     <AppLayout>
@@ -123,9 +190,10 @@ const Orders = () => {
                   width={300}
                   placeholder="Search by order date"
                   height={"40px"}
-                  onChange={onChange}
                 />
                 <Search
+                  value={searchKeyword}
+                  onChange={(e) => setSearchKeyword(e.target.value)}
                   placeholder="Search by order no"
                   enterButton="Search"
                   size="large"
@@ -136,7 +204,30 @@ const Orders = () => {
         </Row>
       </Card>
       <Divider />
-      <Table columns={columns} dataSource={data} />
+      <Spin
+        spinning={isLoading}
+        indicator={
+          <LoadingOutlined style={{ fontSize: 24 }} spin={isLoading} />
+        }
+      >
+        {" "}
+        <Table columns={columns} dataSource={data} pagination={false} />
+        <Flex justify="end">
+          <Pagination
+            className="mt-4"
+            current={currentPage}
+            pageSize={pageSize}
+            total={totalOrders}
+            onChange={handlePageChange}
+            onShowSizeChange={handlePageSizeChange}
+            showSizeChanger
+            pageSizeOptions={["10", "20", "50", "100"]}
+            showTotal={(total, range) =>
+              `${range[0]}-${range[1]} of ${total} products`
+            }
+          />
+        </Flex>
+      </Spin>
     </AppLayout>
   );
 };

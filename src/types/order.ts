@@ -29,3 +29,15 @@ export interface Product {
   quantity: number;
   boughtPrice: number;
 }
+export interface Order {
+  _id: string;
+  customerDataModel: {
+    firstName: string;
+    lastName: string;
+  };
+  orderNo: string;
+  paymentMethod: string;
+  totalPaymentAmount: number;
+  orderStatus: string;
+  orderDate: string;
+}

@@ -11,7 +11,9 @@ export const getAllOrdersEpic = (action$) =>
     mergeMap((action) =>
       from(
         API.get(
-          `/order/getAllOrders?page=${action.payload.Page}&perPage=${action.payload.PageSize}`
+          `/order/getAllOrders?page=${action.payload.page}&perPage=${
+            action.payload.pageSize
+          }&searchKeyword=${action.payload.searchKeyword ?? ""}`
         )
       ).pipe(
         mergeMap((response) => {

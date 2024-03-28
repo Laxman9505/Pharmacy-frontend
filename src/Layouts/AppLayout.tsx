@@ -40,7 +40,7 @@ const AppLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
             className="w-100 m-2"
           /> */}
           <span className="fs-3" style={{ color: "white" }}>
-            PHARMA POS
+            MEDME
           </span>
         </div>
 

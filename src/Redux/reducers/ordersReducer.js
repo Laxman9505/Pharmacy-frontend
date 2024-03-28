@@ -38,15 +38,15 @@ export default function (state = initialState, action) {
       return {
         ...state,
         isLoading: false,
-        getOrderDetailSectionLoading: false,
-        allOrdersList: payload,
+
+        allOrders: payload.items,
+        totalOrders: payload.totalItems,
       };
 
     case "GET_ALL_ORDERS_FAILURE":
       return {
         ...state,
         isLoading: false,
-        getOrderDetailSectionLoading: false,
       };
 
     case "GET_ORDER_DETAIL_BY_ID_REQUEST":
