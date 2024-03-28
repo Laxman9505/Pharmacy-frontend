@@ -30,7 +30,7 @@ export interface Product {
   boughtPrice: number;
 }
 export interface Order {
-  _id: string;
+  id: string;
   customerDataModel: {
     firstName: string;
     lastName: string;

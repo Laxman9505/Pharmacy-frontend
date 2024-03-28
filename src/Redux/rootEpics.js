@@ -21,12 +21,14 @@ import {
   validateOTPEpic,
 } from "./myEpics";
 import {
+  cancelOrderEpic,
   getAllOrdersEpic,
   getNewOrderCreationData,
+  getOrderDetailEpic,
   placeOrderEpic,
 } from "./ordersEpic";
-import { addSupplier, deleteSupplier, getAllSuppliers } from "./supplierEpics";
 import { getStoreDetail, saveStoreDetail } from "./storeEpics";
+import { addSupplier, deleteSupplier, getAllSuppliers } from "./supplierEpics";
 
 export const rootEpic = combineEpics(
   getAllProducts,
@@ -51,5 +53,7 @@ export const rootEpic = combineEpics(
   addSupplier,
   deleteSupplier,
   saveStoreDetail,
-  getStoreDetail
+  getStoreDetail,
+  getOrderDetailEpic,
+  cancelOrderEpic
 );

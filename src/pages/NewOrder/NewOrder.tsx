@@ -14,6 +14,7 @@ import {
   Radio,
   Row,
   Space,
+  Spin,
   Tabs,
   Tooltip,
   Typography,
@@ -148,14 +149,17 @@ const NewOrder = () => {
               />
             </Col>
           </Row>
-          <Row className="mt-3">
-            <Tabs
-              className="w-100"
-              defaultActiveKey="1"
-              items={items}
-              onChange={onChange}
-            />
-          </Row>
+
+          <Spin spinning={getNewOrderCreationDataLoading}>
+            <Row className="mt-3">
+              <Tabs
+                className="w-100"
+                defaultActiveKey="1"
+                items={items}
+                onChange={onChange}
+              />
+            </Row>
+          </Spin>
         </Col>
         <Col span={9}>
           <Card>

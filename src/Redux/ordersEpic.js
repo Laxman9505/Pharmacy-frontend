@@ -77,3 +77,43 @@ export const getNewOrderCreationData = (action$) =>
       )
     )
   );
+export const getOrderDetailEpic = (action$) =>
+  action$.pipe(
+    ofType("GET_ORDER_DETAIL_REQUEST"),
+    mergeMap((action) =>
+      from(API.get(`/order/getOrderDetail/${action.payload}`)).pipe(
+        mergeMap((response) => {
+          return of({
+            type: "GET_ORDER_DETAIL_SUCCESS",
+            payload: response.data,
+          });
+        }),
+        catchError((error) =>
+          of({
+            type: "GET_ORDER_DETAIL_FAILURE",
+            payload: error?.response?.data?.message?.[0]?.message,
+          })
+        )
+      )
+    )
+  );
+export const cancelOrderEpic = (action$) =>
+  action$.pipe(
+    ofType("CANCEL_ORDER_REQUEST"),
+    mergeMap((action) =>
+      from(API.get(`/order/cancelOrder/${action.payload}`)).pipe(
+        mergeMap((response) => {
+          return of({
+            type: "CANCEL_ORDER_SUCCESS",
+            payload: response.data,
+          });
+        }),
+        catchError((error) =>
+          of({
+            type: "CANCEL_ORDER_FAILURE",
+            payload: error?.response?.data,
+          })
+        )
+      )
+    )
+  );

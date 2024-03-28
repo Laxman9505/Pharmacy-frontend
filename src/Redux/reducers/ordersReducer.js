@@ -27,7 +27,44 @@ export default function (state = initialState, action) {
         ...state,
         getNewOrderCreationDataLoading: false,
       };
+    case "GET_ORDER_DETAIL_REQUEST":
+      return {
+        ...state,
+        getOrderDetailLoading: true,
+      };
+    case "GET_ORDER_DETAIL_SUCCESS":
+      return {
+        ...state,
+        getOrderDetailLoading: false,
+        orderDetails: payload,
+      };
+    case "GET_ORDER_DETAIL_FAILURE":
+      return {
+        ...state,
+        getOrderDetailLoading: false,
+      };
+    case "CANCEL_ORDER_REQUEST":
+      return {
+        ...state,
+        isLoading: true,
+        isCancelOrderSuccess: false,
+      };
+    case "CANCEL_ORDER_SUCCESS":
+      openNotificationWithIcon("success", payload?.message);
 
+      return {
+        ...state,
+        isLoading: false,
+        isCancelOrderSuccess: true,
+      };
+    case "CANCEL_ORDER_FAILURE":
+      openNotificationWithIcon("error", payload.message);
+
+      return {
+        ...state,
+        isLoading: false,
+        isCancelOrderSuccess: false,
+      };
     case "GET_ALL_ORDERS_REQUEST":
       return {
         ...state,

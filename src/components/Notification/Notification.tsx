@@ -7,6 +7,6 @@ export const openNotificationWithIcon = (type: string, message: string) => {
   notification[type]({
     // message: type.charAt(0).toUpperCase() + type.slice(1),
     description: message,
-    duration: 5,
+    duration: 3,
   });
 };
