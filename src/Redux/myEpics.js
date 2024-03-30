@@ -1,5 +1,6 @@
 /** @format */
 
+import axios from "axios";
 import { ofType } from "redux-observable";
 import { from, of } from "rxjs";
 import { catchError, mergeMap } from "rxjs/operators";
@@ -113,6 +114,30 @@ export const getDashboardDataEpic = (action$) =>
         catchError((error) =>
           of({
             type: "GET_DASHBOARD_DATA_FAILURE",
+            payload: error?.response?.data?.message?.[0]?.message,
+          })
+        )
+      )
+    )
+  );
+export const printEpic = (action$) =>
+  action$.pipe(
+    ofType("PRINT_REQUEST"),
+    mergeMap((action) =>
+      from(
+        axios.post("http://localhost:7823/print-receipt", {
+          printingData: action.payload,
+        })
+      ).pipe(
+        mergeMap((response) => {
+          return of({
+            type: "PRINT_SUCCESS",
+            payload: response.data,
+          });
+        }),
+        catchError((error) =>
+          of({
+            type: "PRINT_FAILURE",
             payload: error?.response?.data?.message?.[0]?.message,
           })
         )

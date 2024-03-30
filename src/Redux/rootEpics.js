@@ -16,6 +16,7 @@ import { addCustomer, deleteCustomer, getAllCustomers } from "./customerEpics";
 import {
   getDashboardDataEpic,
   loginEpic,
+  printEpic,
   registerOnBoardUserEpic,
   sendOTPtoMail,
   validateOTPEpic,
@@ -55,5 +56,6 @@ export const rootEpic = combineEpics(
   saveStoreDetail,
   getStoreDetail,
   getOrderDetailEpic,
-  cancelOrderEpic
+  cancelOrderEpic,
+  printEpic
 );
