@@ -74,6 +74,17 @@ const NewOrder = () => {
     };
   }, [searchKeyword, dispatch]);
 
+  useEffect(() => {
+    if (placeOrderResponse?.isPaymentCompleted) {
+      dispatch({
+        type: "GET_NEW_ORDER_CREATION_DATA_REQUEST",
+        payload: {
+          searchKeyword: searchKeyword,
+        },
+      });
+    }
+  }, [placeOrderResponse]);
+
   const onChange = (key: string) => {
     console.log(key);
   };
