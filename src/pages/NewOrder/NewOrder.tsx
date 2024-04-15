@@ -90,7 +90,7 @@ const NewOrder = () => {
   };
 
   const items: TabsProps["items"] =
-    newOrderCreationData?.productsWithCategories?.map((proCat, index) => {
+    newOrderCreationData?.productWithCategories?.map((proCat, index) => {
       return {
         key: proCat?.categoryId ?? index,
         label: proCat?.categoryName,
