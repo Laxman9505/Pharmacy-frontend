@@ -1,8 +1,17 @@
 /** @format */
 
 import { PrinterOutlined } from "@ant-design/icons";
-import { Button, Col, Divider, Drawer, Flex, Row, Typography } from "antd";
-import React, { Dispatch, SetStateAction } from "react";
+import {
+  Button,
+  Col,
+  Divider,
+  Drawer,
+  Flex,
+  Input,
+  Row,
+  Typography,
+} from "antd";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { CURRENCY_SYMBOL, THEME_COLOR } from "../../constants/constants";
 
@@ -16,6 +25,7 @@ const OrderReciept: React.FC<{
   const { placeOrderResponse } = useSelector(
     (state: any) => state.ordersReducer
   );
+  const [customOrderData, setCustomOrderDate] = useState<any>();
   const orderReceipt = placeOrderResponse?.receipt;
   const storeDetail = placeOrderResponse?.storeDetail;
 
@@ -32,6 +42,12 @@ const OrderReciept: React.FC<{
     (acc, item) => acc + item.quantity * item.price,
     0
   );
+
+  useEffect(() => {
+    if (orderReceipt?.orderDate) {
+      setCustomOrderDate(orderReceipt?.orderDate);
+    }
+  }, [orderReceipt]);
   return (
     <>
       <Drawer
@@ -88,7 +104,14 @@ const OrderReciept: React.FC<{
                 marginBottom: "0",
               }}
             >
-              Order Date : {orderReceipt?.orderDate}
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <span> Order Date : </span>
+                <Input
+                  style={{ height: "30px" }}
+                  value={customOrderData}
+                  onChange={(e) => setCustomOrderDate(e.target.value)}
+                />{" "}
+              </div>
             </Paragraph>
             <Paragraph
               style={{
@@ -184,7 +207,13 @@ const OrderReciept: React.FC<{
               onClick={() => {
                 dispatch({
                   type: "PRINT_REQUEST",
-                  payload: placeOrderResponse,
+                  payload: {
+                    ...placeOrderResponse,
+                    receipt: {
+                      ...orderReceipt,
+                      orderDate: customOrderData,
+                    },
+                  },
                 });
               }}
               icon={<PrinterOutlined />}
